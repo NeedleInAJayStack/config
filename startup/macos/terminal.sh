@@ -1,33 +1,15 @@
 #!/bin/bash
-# Make sure that brew is installed: https://brew.sh
+set -euo pipefail
 
-set -euvo pipefail
+brew install \
+    fzf \
+    jq \
+    yq
 
-# Applications
 brew install --cask \
-    alacritty \
-    bitwarden \
-    chromium \
-    discord \
-    firefox \
-    font-hack-nerd-font \
-    fork \
-    inkscape \
-    gnucash \
-    libreoffice \
-    obsidian \
-    protonmail-bridge \
-    plexamp \
-    rancher \
-    rectangle \
-    signal \
-    slack \
-    syncthing \
-    visual-studio-code \
-    vlc \
-    xquartz
+    font-hack-nerd-font
 
-# Terminal
+# fish
 if brew list fish > /dev/null;
 then
     echo "fish already installed"
@@ -38,6 +20,7 @@ else
     fish_add_path /opt/homebrew/bin/
 fi
 
+# starship
 if brew list starship > /dev/null;
 then
     echo "starship already installed"
@@ -46,6 +29,16 @@ else
     echo "starship init fish | source" > ~/.config/fish/config.fish
 fi
 
+# neovim
+if brew list neovim > /dev/null;
+then
+    echo "neovim already installed"
+else
+    ln -s ~/dev/config/nvim ~/.config/nvim
+    brew install neovim
+fi
+
+# lsd
 if brew list lsd > /dev/null;
 then
     echo "lsd already installed"
@@ -53,8 +46,3 @@ else
     brew install lsd
     fish --command="alias --save ls='lsd'"
 fi
-
-brew install \
-    fzf \
-    jq \
-    yq
