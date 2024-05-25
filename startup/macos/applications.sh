@@ -3,7 +3,6 @@
 set -euo pipefail
 
 brew install --cask \
-    alacritty \
     bitwarden \
     chromium \
     discord \
@@ -23,3 +22,12 @@ brew install --cask \
     visual-studio-code \
     vlc \
     xquartz
+
+# alacritty
+if brew list --cask alacritty > /dev/null;
+then
+    echo "alacritty already installed"
+else
+    ln -s ~/dev/config/alacritty ~/.config/alacritty
+    brew install --cask alacritty
+fi
