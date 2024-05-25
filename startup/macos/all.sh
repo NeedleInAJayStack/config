@@ -3,3 +3,4 @@ set -euo pipefail
 
 ./applications.sh
 ./terminal.sh
+./dev.sh
