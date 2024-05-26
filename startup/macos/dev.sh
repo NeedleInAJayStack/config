@@ -62,6 +62,9 @@ else
     echo 'if which jenv > /dev/null; status --is-interactive; and source (jenv init -|psub); end' >> ~/.config/fish/config.fish
 fi
 
+# openjdk
+brew install --cask adoptopenjdk
+
 # fisher
 if fish -c "fisher -v" > /dev/null;
 then
