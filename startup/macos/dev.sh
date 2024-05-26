@@ -29,3 +29,20 @@ else
     fish -c "set -Ux PYENV_ROOT $HOME/.pyenv"
     echo 'if which pyenv > /dev/null; status --is-interactive; and source (pyenv init -|psub); end' >> ~/.config/fish/config.fish
 fi
+
+# goenv
+if brew list goenv > /dev/null;
+then
+    echo "goenv already installed"
+else
+    brew install goenv
+    
+    echo 'export GOENV_ROOT="$HOME/.goenv"' >> ~/.bash_profile
+    echo 'eval "$(goenv init -)"' >> ~/.bash_profile
+
+    echo 'export GOENV_ROOT="$HOME/.goenv"' >> ~/.zshrc
+    echo 'eval "$(goenv init -)"' >> ~/.zshrc
+
+    fish -c "set -Ux GOENV_ROOT $HOME/.goenv"
+    echo 'if which goenv > /dev/null; status --is-interactive; and source (goenv init -|psub); end' >> ~/.config/fish/config.fish
+fi
