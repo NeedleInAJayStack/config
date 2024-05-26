@@ -61,3 +61,19 @@ else
     echo 'eval "$(jenv init -)"' >> ~/.zshrc
     echo 'if which jenv > /dev/null; status --is-interactive; and source (jenv init -|psub); end' >> ~/.config/fish/config.fish
 fi
+
+# fisher
+if fish -c "fisher -v" > /dev/null;
+then
+    echo "fisher already installed"
+else
+    curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fish -c "fisher install jorgebucaran/fisher"
+fi
+
+# nvm
+if fish -c "nvm -v" > /dev/null;
+then
+    echo "nvm already installed"
+else
+    fish -c "fisher install jorgebucaran/nvm.fish"
+fi
