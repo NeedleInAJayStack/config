@@ -2,7 +2,8 @@
 set -euo pipefail
 
 brew install \
-  texlive
+  texlive \
+  openjdk
 
 # swiftenv
 if brew list kylef/formulae/swiftenv > /dev/null;
@@ -47,4 +48,16 @@ else
 
     fish -c "set -Ux GOENV_ROOT $HOME/.goenv"
     echo 'if which goenv > /dev/null; status --is-interactive; and source (goenv init -|psub); end' >> ~/.config/fish/config.fish
+fi
+
+# jenv
+if brew list jenv > /dev/null;
+then
+    echo "jenv already installed"
+else
+    brew install jenv
+    
+    echo 'eval "$(jenv init -)"' >> ~/.bash_profile
+    echo 'eval "$(jenv init -)"' >> ~/.zshrc
+    echo 'if which jenv > /dev/null; status --is-interactive; and source (jenv init -|psub); end' >> ~/.config/fish/config.fish
 fi
