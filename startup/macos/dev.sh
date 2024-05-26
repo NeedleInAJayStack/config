@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+brew install \
+  texlive
 
 # swiftenv
 if brew list kylef/formulae/swiftenv > /dev/null;
