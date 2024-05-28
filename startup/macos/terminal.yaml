@@ -1,0 +1,74 @@
+- hosts: localhost
+  tasks:
+    - name: Ensure Homebrew is installed
+      community.general.homebrew:
+        update_homebrew: yes
+
+    - name: Install fzf
+      community.general.homebrew:
+        name: fzf
+        state: present
+    - name: Install jq
+      community.general.homebrew:
+        name: jq
+        state: present
+    - name: Install yq
+      community.general.homebrew:
+        name: yq
+        state: present
+
+    - name: Install font-hack-nerd-font
+      community.general.homebrew_cask:
+        name: font-hack-nerd-font
+        state: present
+
+    - name: Install fish
+      community.general.homebrew:
+        name: fish
+        state: present
+      register: fish_install_result
+    - name: Add to shells
+      lineinfile:
+        path: /etc/shells
+        line: "/opt/homebrew/bin/fish"
+        state: present
+
+    - name: Check for fisher
+      shell: fish --command "fisher -v"
+      ignore_errors: yes
+      register: fisher_check_result
+      changed_when: fisher_check_result.failed
+    - name: Install fisher
+      shell: curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fish -c "fisher install jorgebucaran/fisher"
+      when: fisher_check_result.failed
+
+    - name: Install starship
+      community.general.homebrew:
+        name: starship
+        state: present
+    - name: Add init to fish
+      lineinfile:
+        path: ~/.config/fish/config.fish
+        line: "starship init fish | source"
+        state: present
+
+    - name: Install neovim
+      community.general.homebrew:
+        name: neovim
+        state: present
+    - name: Link neovim config
+      file:
+        src: ~/dev/config/alacritty
+        dest: ~/.config/alacritty
+        state: link
+
+    - name: Install lsd
+      community.general.homebrew:
+        name: lsd
+        state: present
+      register: lsd_install_result
+    - name: Add alias if lsd was installed or changed
+      shell: |
+        fish --command="alias --save ls='lsd'"
+      when: lsd_install_result.changed
+    
