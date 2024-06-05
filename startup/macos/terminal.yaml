@@ -4,18 +4,16 @@
       community.general.homebrew:
         update_homebrew: yes
 
-    - name: Install fzf
+    - name: Install packages
       community.general.homebrew:
-        name: fzf
+        name: "{{ item }}"
         state: present
-    - name: Install jq
-      community.general.homebrew:
-        name: jq
-        state: present
-    - name: Install yq
-      community.general.homebrew:
-        name: yq
-        state: present
+      loop:
+        - fzf
+        - jq
+        - neovim
+        - starship
+        - yq
 
     - name: Install font-hack-nerd-font
       community.general.homebrew_cask:
@@ -42,20 +40,12 @@
       shell: fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
       when: fisher_check_result.failed
 
-    - name: Install starship
-      community.general.homebrew:
-        name: starship
-        state: present
-    - name: Add init to fish
+    - name: Add starship init to fish
       lineinfile:
         path: ~/.config/fish/config.fish
         line: "starship init fish | source"
         state: present
 
-    - name: Install neovim
-      community.general.homebrew:
-        name: neovim
-        state: present
     - name: Link neovim config
       file:
         src: ~/dev/config/alacritty

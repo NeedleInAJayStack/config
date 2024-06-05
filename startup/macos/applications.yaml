@@ -4,117 +4,36 @@
       community.general.homebrew:
         update_homebrew: yes
 
-    - name: Install alacritty
+    - name: Install casks
       community.general.homebrew_cask:
-        name: alacritty
+        name: "{{ item }}"
         state: present
+      loop:
+        - alacritty
+        - bitwarden
+        - chromium
+        - discord
+        - firefox
+        - fork
+        - inkscape
+        - gnucash
+        - libreoffice
+        - obsidian
+        - protonmail-bridge
+        - protonvpn
+        - plexamp
+        - rancher
+        - rectangle
+        - signal
+        - slack
+        - syncthing
+        - tailscale
+        - visual-studio-code
+        - vlc
+        - xquartz
+
     - name: Link alacritty config
       file:
         src: ~/dev/config/alacritty
         dest: ~/.config/alacritty
         state: link
-    
-    - name: Install bitwarden
-      community.general.homebrew_cask:
-        name: bitwarden
-        state: present
-
-    - name: Install chromium
-      community.general.homebrew_cask:
-        name: chromium
-        state: present
-
-    - name: Install discord
-      community.general.homebrew_cask:
-        name: discord
-        state: present
-
-    - name: Install firefox
-      community.general.homebrew_cask:
-        name: firefox
-        state: present
-
-    - name: Install fork
-      community.general.homebrew_cask:
-        name: fork
-        state: present
-
-    - name: Install inkscape
-      community.general.homebrew_cask:
-        name: inkscape
-        state: present
-
-    - name: Install gnucash
-      community.general.homebrew_cask:
-        name: gnucash
-        state: present
-
-    - name: Install libreoffice
-      community.general.homebrew_cask:
-        name: libreoffice
-        state: present
-
-    - name: Install obsidian
-      community.general.homebrew_cask:
-        name: obsidian
-        state: present
-
-    - name: Install protonmail-bridge
-      community.general.homebrew_cask:
-        name: protonmail-bridge
-        state: present
-
-    - name: Install protonvpn
-      community.general.homebrew_cask:
-        name: protonvpn
-        state: present
-        
-    - name: Install plexamp
-      community.general.homebrew_cask:
-        name: plexamp
-        state: present
-
-    - name: Install rancher
-      community.general.homebrew_cask:
-        name: rancher
-        state: present
-
-    - name: Install rectangle
-      community.general.homebrew_cask:
-        name: rectangle
-        state: present
-
-    - name: Install signal
-      community.general.homebrew_cask:
-        name: signal
-        state: present
-
-    - name: Install slack
-      community.general.homebrew_cask:
-        name: slack
-        state: present
-
-    - name: Install tailscale
-      community.general.homebrew_cask:
-        name: tailscale
-        state: present
-
-    - name: Install syncthing
-      community.general.homebrew_cask:
-        name: syncthing
-        state: present
-
-    - name: Install visual-studio-code
-      community.general.homebrew_cask:
-        name: visual-studio-code
-        state: present
-
-    - name: Install vlc
-      community.general.homebrew_cask:
-        name: vlc
-        state: present
-
-    - name: Install xquartz
-      community.general.homebrew_cask:
-        name: xquartz
-        state: present
