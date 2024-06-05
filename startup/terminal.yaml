@@ -68,12 +68,20 @@
       become: true
       when: ansible_facts["os_family"] == "Debian"
 
-    - name: Install snaps
+    - name: Install stable snaps
       community.general.snap:
         name:
-          - starship
           - yq
       become: true
+      when: ansible_facts["os_family"] == "Debian"
+
+    - name: Install edge snaps
+      community.general.snap:
+        name: 
+          - starship
+        channel: edge # starship isn't available as a stable snap atm
+      become: true
+      when: ansible_facts["os_family"] == "Debian"
     
     # TODO: LSD is only available in Ubuntu 23.04 :(
     - name: Install lsd
