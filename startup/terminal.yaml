@@ -116,8 +116,8 @@
 
     - name: Link neovim config
       file:
-        src: ~/dev/config/alacritty
-        dest: ~/.config/alacritty
+        src: ~/dev/config/nvim
+        dest: ~/.config/nvim
         state: link
 
     - name: Add alias if lsd was installed or changed
