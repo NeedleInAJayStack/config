@@ -40,12 +40,65 @@
       register: fish_install_result
       when: ansible_facts["os_family"] == "Darwin"
 
+    # Ubuntu (Debian)
+    - name: Add apt repositories
+      ansible.builtin.apt_repository:
+        repo: "{{ item }}"
+      become: true
+      when: ansible_facts["os_family"] == "Debian"
+      loop:
+        - ppa:fish-shell/release-3
+    
+    - name: Update apt
+      ansible.builtin.apt:
+        update_cache: yes
+      become: true
+      when: ansible_facts["os_family"] == "Debian"
+
+    - name: Install apt packages
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - fzf
+        - htop
+        - jq
+        - neovim
+      become: true
+      when: ansible_facts["os_family"] == "Debian"
+
+    - name: Install snaps
+      community.general.snap:
+        name:
+          - starship
+          - yq
+      become: true
+    
+    # TODO: LSD is only available in Ubuntu 23.04 :(
+    - name: Install lsd
+      ansible.builtin.apt:
+        name: lsd
+        state: present
+      become: true
+      when: ansible_facts["os_family"] == "Debian"
+      register: lsd_install_result
+
+    # TODO: Figure out how to install nerd fonts on Ubuntu
+
+    - name: Install fish
+      ansible.builtin.apt:
+        name: fish
+        state: present
+      register: fish_install_result
+      when: ansible_facts["os_family"] == "Debian"
+
     # General
     - name: Add fish to shells
       lineinfile:
         path: /etc/shells
         line: "/opt/homebrew/bin/fish"
         state: present
+      become: true
     - name: Check for fisher
       shell: fish --command "fisher -v"
       ignore_errors: yes
