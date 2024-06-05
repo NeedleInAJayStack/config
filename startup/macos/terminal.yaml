@@ -10,6 +10,7 @@
         state: present
       loop:
         - fzf
+        - htop
         - jq
         - neovim
         - starship
