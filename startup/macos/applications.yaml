@@ -64,6 +64,11 @@
         name: protonmail-bridge
         state: present
 
+    - name: Install protonvpn
+      community.general.homebrew_cask:
+        name: protonvpn
+        state: present
+        
     - name: Install plexamp
       community.general.homebrew_cask:
         name: plexamp
@@ -89,6 +94,11 @@
         name: slack
         state: present
 
+    - name: Install tailscale
+      community.general.homebrew_cask:
+        name: tailscale
+        state: present
+
     - name: Install syncthing
       community.general.homebrew_cask:
         name: syncthing
@@ -108,4 +118,3 @@
       community.general.homebrew_cask:
         name: xquartz
         state: present
-    
