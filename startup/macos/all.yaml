@@ -1,3 +1,2 @@
 - import_playbook: applications.yaml
-- import_playbook: terminal.yaml
 - import_playbook: dev.yaml
