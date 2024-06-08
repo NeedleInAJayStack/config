@@ -7,6 +7,7 @@
       loop:
         - curl
         - gnupg
+        - gcc
       become: true
 
     - name: Add apt repositories
