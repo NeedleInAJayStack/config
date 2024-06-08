@@ -1,5 +1,14 @@
 - hosts: localhost
   tasks:
+    - name: Install base apt packages
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - curl
+        - gnupg
+      become: true
+
     - name: Add apt repositories
       ansible.builtin.apt_repository:
         repo: "{{ item }}"
@@ -38,7 +47,6 @@
         name: "{{ item }}"
         state: present
       loop:
-        - curl
         - fzf
         - htop
         - jq
