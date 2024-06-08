@@ -13,5 +13,5 @@ Note that if installing macos playbooks, you will likely have to install [homebr
 And then run playbooks via:
 
 ```sh
-ansible-playbook -i inventory.ini <playbook>.yaml
+ansible-playbook -i inventory.ini --ask-become <playbook>.yaml
 ```
