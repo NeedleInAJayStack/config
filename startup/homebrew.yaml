@@ -18,25 +18,11 @@
         line: test -d /opt/homebrew/bin && eval "$(/opt/homebrew/bin/brew shellenv)"
         state: present
       when: ansible_facts["os_family"] == "Darwin"
-    - name: Add homebrew to fish (MacOS)
-      lineinfile:
-        path: ~/.config/fish/config.fish
-        line: test -d /opt/homebrew/bin && eval "$(/opt/homebrew/bin/brew shellenv)"
-        state: present
-      when: ansible_facts["os_family"] == "Darwin"
     
     # Linux
     - name: Add homebrew to bash (Linux)
       blockinfile:
         path: ~/.bash_profile
-        block: |
-          test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
-          test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-        state: present
-      when: ansible_facts["os_family"] == "Debian"
-    - name: Add homebrew to fish (Linux)
-      blockinfile:
-        path: ~/.config/fish/config.fish
         block: |
           test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
           test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
