@@ -1,0 +1,71 @@
+- hosts: localhost
+  tasks:
+    - name: Ensure Homebrew is installed
+      community.general.homebrew:
+        update_homebrew: yes
+      when: ansible_facts["os_family"] == "Darwin"
+
+    - name: Install packages
+      community.general.homebrew:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - fzf
+        - htop
+        - jq
+        - neovim
+        - starship
+        - yq
+      when: ansible_facts["os_family"] == "Darwin"
+
+    - name: Install lsd
+      community.general.homebrew:
+        name: lsd
+        state: present
+      when: ansible_facts["os_family"] == "Darwin"
+      register: lsd_install_result
+
+    - name: Install font-hack-nerd-font
+      community.general.homebrew_cask:
+        name: font-hack-nerd-font
+        state: present
+      when: ansible_facts["os_family"] == "Darwin"
+
+    - name: Install fish
+      community.general.homebrew:
+        name: fish
+        state: present
+      register: fish_install_result
+      when: ansible_facts["os_family"] == "Darwin"
+
+    - name: Add fish to shells
+      lineinfile:
+        path: /etc/shells
+        line: "/opt/homebrew/bin/fish"
+        state: present
+      become: true
+    - name: Check for fisher
+      shell: fish --command "fisher -v"
+      ignore_errors: yes
+      register: fisher_check_result
+      changed_when: fisher_check_result.failed
+    - name: Install fisher
+      shell: fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
+      when: fisher_check_result.failed
+
+    - name: Add starship init to fish
+      lineinfile:
+        path: ~/.config/fish/config.fish
+        line: "starship init fish | source"
+        state: present
+
+    - name: Link neovim config
+      file:
+        src: ~/dev/config/nvim
+        dest: ~/.config/nvim
+        state: link
+
+    - name: Add alias if lsd was installed or changed
+      shell: |
+        fish --command="alias --save ls='lsd'"
+      when: lsd_install_result.changed

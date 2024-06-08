@@ -1,51 +1,9 @@
 - hosts: localhost
   tasks:
-    
-    # MacOS (Darwin)
-    - name: Ensure Homebrew is installed
-      community.general.homebrew:
-        update_homebrew: yes
-      when: ansible_facts["os_family"] == "Darwin"
-
-    - name: Install packages
-      community.general.homebrew:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - fzf
-        - htop
-        - jq
-        - neovim
-        - starship
-        - yq
-      when: ansible_facts["os_family"] == "Darwin"
-
-    - name: Install lsd
-      community.general.homebrew:
-        name: lsd
-        state: present
-      when: ansible_facts["os_family"] == "Darwin"
-      register: lsd_install_result
-
-    - name: Install font-hack-nerd-font
-      community.general.homebrew_cask:
-        name: font-hack-nerd-font
-        state: present
-      when: ansible_facts["os_family"] == "Darwin"
-
-    - name: Install fish
-      community.general.homebrew:
-        name: fish
-        state: present
-      register: fish_install_result
-      when: ansible_facts["os_family"] == "Darwin"
-
-    # Ubuntu (Debian)
     - name: Add apt repositories
       ansible.builtin.apt_repository:
         repo: "{{ item }}"
       become: true
-      when: ansible_facts["os_family"] == "Debian"
       loop:
         - ppa:fish-shell/release-3
         - ppa:neovim-ppa/stable
@@ -54,7 +12,6 @@
       ansible.builtin.apt:
         update_cache: yes
       become: true
-      when: ansible_facts["os_family"] == "Debian"
 
     - name: Install apt packages
       ansible.builtin.apt:
@@ -66,14 +23,12 @@
         - jq
         - neovim
       become: true
-      when: ansible_facts["os_family"] == "Debian"
 
     - name: Install stable snaps
       community.general.snap:
         name:
           - yq
       become: true
-      when: ansible_facts["os_family"] == "Debian"
 
     - name: Install edge snaps
       community.general.snap:
@@ -81,7 +36,6 @@
           - starship
         channel: edge # starship isn't available as a stable snap atm
       become: true
-      when: ansible_facts["os_family"] == "Debian"
     
     # TODO: LSD is only available in Ubuntu 23.04 :(
     - name: Install lsd
@@ -89,7 +43,6 @@
         name: lsd
         state: present
       become: true
-      when: ansible_facts["os_family"] == "Debian"
       register: lsd_install_result
 
     # TODO: Figure out how to install nerd fonts on Ubuntu
@@ -99,9 +52,7 @@
         name: fish
         state: present
       register: fish_install_result
-      when: ansible_facts["os_family"] == "Debian"
 
-    # General
     - name: Add fish to shells
       lineinfile:
         path: /etc/shells
