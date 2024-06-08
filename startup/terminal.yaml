@@ -1,11 +1,9 @@
 - hosts: localhost
   tasks:
     
-    # MacOS (Darwin)
     - name: Ensure Homebrew is installed
       community.general.homebrew:
         update_homebrew: yes
-      when: ansible_facts["os_family"] == "Darwin"
 
     - name: Install packages
       community.general.homebrew:
@@ -18,96 +16,42 @@
         - neovim
         - starship
         - yq
-      when: ansible_facts["os_family"] == "Darwin"
 
-    - name: Install lsd
-      community.general.homebrew:
-        name: lsd
-        state: present
-      when: ansible_facts["os_family"] == "Darwin"
-      register: lsd_install_result
-
-    - name: Install font-hack-nerd-font
+    - name: Install casks
       community.general.homebrew_cask:
-        name: font-hack-nerd-font
-        state: present
-      when: ansible_facts["os_family"] == "Darwin"
-
-    - name: Install fish
-      community.general.homebrew:
-        name: fish
-        state: present
-      register: fish_install_result
-      when: ansible_facts["os_family"] == "Darwin"
-
-    # Ubuntu (Debian)
-    - name: Add apt repositories
-      ansible.builtin.apt_repository:
-        repo: "{{ item }}"
-      become: true
-      when: ansible_facts["os_family"] == "Debian"
-      loop:
-        - ppa:fish-shell/release-3
-        - ppa:neovim-ppa/stable
-    
-    - name: Update apt
-      ansible.builtin.apt:
-        update_cache: yes
-      become: true
-      when: ansible_facts["os_family"] == "Debian"
-
-    - name: Install apt packages
-      ansible.builtin.apt:
         name: "{{ item }}"
         state: present
       loop:
-        - fzf
-        - htop
-        - jq
-        - neovim
-      become: true
-      when: ansible_facts["os_family"] == "Debian"
+        - font-hack-nerd-font
+      when: ansible_facts["os_family"] == "Darwin" # Casks unsupported on Linux
 
-    - name: Install stable snaps
-      community.general.snap:
-        name:
-          - yq
-      become: true
-      when: ansible_facts["os_family"] == "Debian"
-
-    - name: Install edge snaps
-      community.general.snap:
-        name: 
-          - starship
-        channel: edge # starship isn't available as a stable snap atm
-      become: true
-      when: ansible_facts["os_family"] == "Debian"
-    
-    # TODO: LSD is only available in Ubuntu 23.04 :(
     - name: Install lsd
-      ansible.builtin.apt:
+      community.general.homebrew:
         name: lsd
         state: present
-      become: true
-      when: ansible_facts["os_family"] == "Debian"
+      when: ansible_facts["os_family"] == "Darwin"
       register: lsd_install_result
 
-    # TODO: Figure out how to install nerd fonts on Ubuntu
-
     - name: Install fish
-      ansible.builtin.apt:
+      community.general.homebrew:
         name: fish
         state: present
       register: fish_install_result
-      when: ansible_facts["os_family"] == "Debian"
 
-    # General
-    - name: Add fish to shells
+    - name: Add fish to shells (MacOS)
       lineinfile:
         path: /etc/shells
         line: "/opt/homebrew/bin/fish"
         state: present
       become: true
+      when: ansible_facts["os_family"] == "Darwin"
+    - name: Add fish to shells (Linux)
+      lineinfile:
+        path: /etc/shells
+        line: "/home/linuxbrew/.linuxbrew/bin/fish"
+        state: present
+      become: true
+      when: ansible_facts["os_family"] == "Debian"
     - name: Check for fisher
       shell: fish --command "fisher -v"
       ignore_errors: yes
@@ -123,13 +67,13 @@
         line: "starship init fish | source"
         state: present
 
+    - name: Add alias if lsd was installed or changed
+      shell: |
+        fish --command="alias --save ls='lsd'"
+      when: lsd_install_result.changed
+
     - name: Link neovim config
       file:
         src: ~/dev/config/nvim
         dest: ~/.config/nvim
         state: link
-
-    - name: Add alias if lsd was installed or changed
-      shell: |
-        fish --command="alias --save ls='lsd'"
-      when: lsd_install_result.changed
