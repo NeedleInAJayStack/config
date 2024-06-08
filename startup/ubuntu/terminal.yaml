@@ -84,7 +84,7 @@
       register: starship_check_result
       changed_when: starship_check_result.failed
     - name: Install starship
-      shell: curl -sS https://starship.rs/install.sh | sh
+      shell: curl -sS https://starship.rs/install.sh | sh -s -- -f
       when: starship_check_result.failed
     - name: Add starship init to fish
       lineinfile:
