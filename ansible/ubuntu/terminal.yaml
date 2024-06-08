@@ -1,7 +1,7 @@
 - hosts: localhost
   tasks:
     - name: Install base apt packages
-      ansible.builtin.apt:
+      apt:
         name: "{{ item }}"
         state: present
       loop:
@@ -11,7 +11,7 @@
       become: true
 
     - name: Add apt repositories
-      ansible.builtin.apt_repository:
+      apt_repository:
         repo: "{{ item }}"
       become: true
       loop:
@@ -19,12 +19,12 @@
         - ppa:neovim-ppa/stable
     
     - name: Update apt
-      ansible.builtin.apt:
+      apt:
         update_cache: yes
       become: true
 
     - name: Install fish
-      ansible.builtin.apt:
+      apt:
         name: fish
         state: present
       register: fish_install_result
@@ -40,7 +40,7 @@
         fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
 
     - name: Install apt packages
-      ansible.builtin.apt:
+      apt:
         name: "{{ item }}"
         state: present
       loop:
@@ -59,7 +59,7 @@
     
     # TODO: LSD is only available in Ubuntu 23.04 :(
     # - name: Install lsd
-    #   ansible.builtin.apt:
+    #   apt:
     #     name: lsd
     #     state: present
     #   become: true
