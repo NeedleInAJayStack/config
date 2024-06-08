@@ -21,7 +21,7 @@
     - name: Add fish to shells
       lineinfile:
         path: /etc/shells
-        line: "/opt/homebrew/bin/fish"
+        line: "/usr/bin/fish"
         state: present
       become: true
     - name: Check for fisher
