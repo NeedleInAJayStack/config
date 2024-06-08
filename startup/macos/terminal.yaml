@@ -44,14 +44,10 @@
         line: "/opt/homebrew/bin/fish"
         state: present
       become: true
-    - name: Check for fisher
-      shell: fish --command "fisher -v"
-      ignore_errors: yes
-      register: fisher_check_result
-      changed_when: fisher_check_result.failed
     - name: Install fisher
-      shell: fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
-      when: fisher_check_result.failed
+      shell: |
+        fish --command "fisher -v" || \
+        fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
 
     - name: Add starship init to fish
       lineinfile:

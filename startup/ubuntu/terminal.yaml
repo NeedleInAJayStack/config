@@ -34,14 +34,10 @@
         line: "/usr/bin/fish"
         state: present
       become: true
-    - name: Check for fisher
-      shell: fish --command "fisher -v"
-      ignore_errors: yes
-      register: fisher_check_result
-      changed_when: fisher_check_result.failed
     - name: Install fisher
-      shell: fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
-      when: fisher_check_result.failed
+      shell: |
+        fish --command "fisher -v" || \
+        fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
 
     - name: Install apt packages
       ansible.builtin.apt:
@@ -54,16 +50,12 @@
         - neovim
       become: true
 
-    - name: Check for yq
-      shell: which yq
-      ignore_errors: yes
-      register: yq_check_result
-      changed_when: yq_check_result.failed
     - name: Install yq
       shell: |
-        platform=$(uname -m)
-        curl https://github.com/mikefarah/yq/releases/latest/download/yq_linux_$platform -o /usr/bin/yq && chmod +x /usr/bin/yq
-      when: yq_check_result.failed
+        which yq || (
+          platform=$(uname -m)
+          curl https://github.com/mikefarah/yq/releases/latest/download/yq_linux_$platform -o /usr/bin/yq && chmod +x /usr/bin/yq;
+        )
     
     # TODO: LSD is only available in Ubuntu 23.04 :(
     # - name: Install lsd
@@ -79,14 +71,10 @@
     
     # TODO: Figure out how to install nerd fonts on Ubuntu
 
-    - name: Check for starship
-      shell: which starship
-      ignore_errors: yes
-      register: starship_check_result
-      changed_when: starship_check_result.failed
     - name: Install starship
-      shell: curl -sS https://starship.rs/install.sh | sh -s -- -f
-      when: starship_check_result.failed
+      shell: |
+        which starship || \
+        curl -sS https://starship.rs/install.sh | sh -s -- -f
     - name: Add starship init to fish
       lineinfile:
         path: ~/.config/fish/config.fish
