@@ -78,6 +78,7 @@
     - name: Add starship init to fish
       lineinfile:
         path: ~/.config/fish/config.fish
+        create: true
         line: "starship init fish | source"
         state: present
 
