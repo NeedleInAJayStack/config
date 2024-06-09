@@ -38,6 +38,8 @@
       shell: |
         fish --command "fisher -v" || \
         fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
+      register: fisher_result
+      changed_when: fisher_result.stdout is match("fisher install")
 
     - name: Install apt packages
       apt:
@@ -54,8 +56,11 @@
       shell: |
         which yq || (
           platform=$(uname -m)
-          curl https://github.com/mikefarah/yq/releases/latest/download/yq_linux_$platform -o /usr/bin/yq && chmod +x /usr/bin/yq;
+          curl https://github.com/mikefarah/yq/releases/latest/download/yq_linux_$platform -o /usr/bin/yq
+          chmod +x /usr/bin/yq
         )
+      register: yq_result
+      changed_when: yq_result.stdout is not regex(".*/yq")
     
     # TODO: LSD is only available in Ubuntu 23.04 :(
     # - name: Install lsd
@@ -75,6 +80,8 @@
       shell: |
         which starship || \
         curl -sS https://starship.rs/install.sh | sh -s -- -f
+      register: starship_result
+      changed_when: starship_result.stdout is not regex(".*/starship")
     - name: Add starship init to fish
       lineinfile:
         path: ~/.config/fish/config.fish
