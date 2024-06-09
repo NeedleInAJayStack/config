@@ -1,0 +1,141 @@
+# Assumes that 'terminal.yaml' has been run to set up fish & fisher
+- hosts: localhost
+  tasks:
+    - name: Ensure Homebrew is installed
+      community.general.homebrew:
+        update_homebrew: yes
+
+    - name: Install texlive
+      community.general.homebrew:
+        name: texlive
+        state: present
+
+    - name: Install adoptopenjdk
+      community.general.homebrew_cask:
+        name: adoptopenjdk
+        state: present
+
+    - name: Install swiftenv
+      community.general.homebrew:
+        name: kylef/formulae/swiftenv
+        state: present
+    - name: Add swiftenv to bash
+      lineinfile:
+        path: ~/.bash_profile
+        line: "if which swiftenv > /dev/null; then eval \"$(swiftenv init -)\"; fi"
+        state: present
+    - name: Add swiftenv to zsh
+      lineinfile:
+        path: ~/.zshrc
+        line: "if which swiftenv > /dev/null; then eval \"$(swiftenv init -)\"; fi"
+        state: present
+    - name: Add swiftenv to fish
+      lineinfile:
+        path: ~/.config/fish/config.fish
+        line: "if which swiftenv > /dev/null; status --is-interactive; and source (swiftenv init -|psub); end"
+        state: present
+
+    - name: Install pyenv
+      community.general.homebrew:
+        name: pyenv
+        state: present
+    - name: Add pyenv to bash
+      lineinfile:
+        path: ~/.bash_profile
+        line: "{{ item }}"
+        state: present
+      loop:
+        - eval "$(pyenv init -)"
+        - export PYENV_ROOT="$HOME/.pyenv"
+    - name: Add pyenv to zsh
+      lineinfile:
+        path: ~/.zshrc
+        line: "{{ item }}"
+        state: present
+      loop:
+        - eval "$(pyenv init -)"
+        - export PYENV_ROOT="$HOME/.pyenv"
+    - name: Add pyenv to fish
+      lineinfile:
+        path: ~/.config/fish/config.fish
+        line: "{{ item }}"
+        state: present
+      loop:
+        - if which pyenv > /dev/null; status --is-interactive; and source (pyenv init -|psub); end
+        - set -gx PYENV_ROOT $HOME/.pyenv
+
+    - name: Install goenv
+      community.general.homebrew:
+        name: goenv
+        state: present
+    - name: Add goenv to bash
+      lineinfile:
+        path: ~/.bash_profile
+        line: "{{ item }}"
+        state: present
+      loop:
+        - eval "$(goenv init -)"
+        - export GOENV_ROOT="$HOME/.goenv"
+    - name: Add goenv to zsh
+      lineinfile:
+        path: ~/.zshrc
+        line: "{{ item }}"
+        state: present
+      loop:
+        - eval "$(goenv init -)"
+        - export GOENV_ROOT="$HOME/.goenv"
+    - name: Add goenv to fish
+      lineinfile:
+        path: ~/.config/fish/config.fish
+        line: "{{ item }}"
+        state: present
+      loop:
+        - if which goenv > /dev/null; status --is-interactive; and source (goenv init -|psub); end
+        - set -gx GOENV_ROOT $HOME/.goenv
+
+    - name: Install jenv
+      community.general.homebrew:
+        name: jenv
+        state: present
+    - name: Add jenv to bash
+      lineinfile:
+        path: ~/.bash_profile
+        line: "eval \"$(jenv init -)\""
+        state: present
+    - name: Add jenv to zsh
+      lineinfile:
+        path: ~/.zshrc
+        line: "eval \"$(jenv init -)\""
+        state: present
+    - name: Add jenv to fish
+      lineinfile:
+        path: ~/.config/fish/config.fish
+        line: "if which jenv > /dev/null; status --is-interactive; and source (jenv init -|psub); end"
+        state: present
+
+    - name: Install nvm
+      community.general.homebrew:
+        name: nvm
+        state: present
+    - name: Add nvm to bash
+      lineinfile:
+        path: ~/.bash_profile
+        line: "{{ item }}"
+        state: present
+      loop:
+        - '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm'
+        - '[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion'
+    - name: Add nvm to zsh
+      lineinfile:
+        path: ~/.zshrc
+        line: "{{ item }}"
+        state: present
+      loop:
+        - '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm'
+        - '[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion'
+    - name: Install nvm.fish
+      shell: |
+        fish --command "nvm -v" || \
+        fish --command "fisher install jorgebucaran/nvm.fish"
+      register: nvm_fish_result
+      changed_when: nvm_fish_result.stdout is match("fisher")

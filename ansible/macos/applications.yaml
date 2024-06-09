@@ -1,0 +1,39 @@
+- hosts: localhost
+  tasks:
+    - name: Ensure Homebrew is installed
+      community.general.homebrew:
+        update_homebrew: yes
+
+    - name: Install casks
+      community.general.homebrew_cask:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - alacritty
+        - bitwarden
+        - chromium
+        - discord
+        - firefox
+        - fork
+        - inkscape
+        - gnucash
+        - libreoffice
+        - obsidian
+        - protonmail-bridge
+        - protonvpn
+        - plexamp
+        - rancher
+        - rectangle
+        - signal
+        - slack
+        - syncthing
+        - tailscale
+        - visual-studio-code
+        - vlc
+        - xquartz
+
+    - name: Link alacritty config
+      file:
+        src: ~/dev/config/alacritty
+        dest: ~/.config/alacritty
+        state: link
