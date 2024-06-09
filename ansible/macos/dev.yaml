@@ -39,77 +39,64 @@
       community.general.homebrew:
         name: pyenv
         state: present
-      register: pyenv_install_result
     - name: Add pyenv to bash
       lineinfile:
         path: ~/.bash_profile
-        line: "eval \"$(pyenv init -)\""
+        line: "{{ item }}"
         state: present
-    - name: Add PYENV_ROOT to bash
-      lineinfile:
-        path: ~/.bash_profile
-        line: "export PYENV_ROOT=\"$HOME/.pyenv\""
-        state: present
+      loop:
+        - eval "$(pyenv init -)"
+        - export PYENV_ROOT="$HOME/.pyenv"
     - name: Add pyenv to zsh
       lineinfile:
         path: ~/.zshrc
-        line: "eval \"$(pyenv init -)\""
+        line: "{{ item }}"
         state: present
-    - name: Add PYENV_ROOT to zsh
-      lineinfile:
-        path: ~/.zshrc
-        line: "export PYENV_ROOT=\"$HOME/.pyenv\""
-        state: present
+      loop:
+        - eval "$(pyenv init -)"
+        - export PYENV_ROOT="$HOME/.pyenv"
     - name: Add pyenv to fish
       lineinfile:
         path: ~/.config/fish/config.fish
-        line: "if which pyenv > /dev/null; status --is-interactive; and source (pyenv init -|psub); end"
+        line: "{{ item }}"
         state: present
-    - name: Add PYENV_ROOT to fish
-      shell: |
-        fish --command "set -Ux PYENV_ROOT $HOME/.pyenv"
-      when: pyenv_install_result.changed
+      loop:
+        - if which pyenv > /dev/null; status --is-interactive; and source (pyenv init -|psub); end
+        - set -gx PYENV_ROOT $HOME/.pyenv
 
     - name: Install goenv
       community.general.homebrew:
         name: goenv
         state: present
-      register: goenv_install_result
     - name: Add goenv to bash
       lineinfile:
         path: ~/.bash_profile
-        line: "eval \"$(goenv init -)\""
+        line: "{{ item }}"
         state: present
-    - name: Add GOENV_ROOT to bash
-      lineinfile:
-        path: ~/.bash_profile
-        line: "export GOENV_ROOT=\"$HOME/.goenv\""
-        state: present
+      loop:
+        - eval "$(goenv init -)"
+        - export GOENV_ROOT="$HOME/.goenv"
     - name: Add goenv to zsh
       lineinfile:
         path: ~/.zshrc
-        line: "eval \"$(goenv init -)\""
+        line: "{{ item }}"
         state: present
-    - name: Add GOENV_ROOT to zsh
-      lineinfile:
-        path: ~/.zshrc
-        line: "export GOENV_ROOT=\"$HOME/.goenv\""
-        state: present
+      loop:
+        - eval "$(goenv init -)"
+        - export GOENV_ROOT="$HOME/.goenv"
     - name: Add goenv to fish
       lineinfile:
         path: ~/.config/fish/config.fish
-        line: "if which goenv > /dev/null; status --is-interactive; and source (goenv init -|psub); end"
+        line: "{{ item }}"
         state: present
-    - name: Add GOENV_ROOT to fish
-      shell: |
-        fish --command "set -Ux GOENV_ROOT $HOME/.goenv"
-      when: goenv_install_result.changed
+      loop:
+        - if which goenv > /dev/null; status --is-interactive; and source (goenv init -|psub); end
+        - set -gx GOENV_ROOT $HOME/.goenv
 
     - name: Install jenv
       community.general.homebrew:
         name: jenv
         state: present
-      register: jenv_install_result
     - name: Add jenv to bash
       lineinfile:
         path: ~/.bash_profile
@@ -131,25 +118,24 @@
         name: nvm
         state: present
     - name: Add nvm to bash
-      blockinfile:
+      lineinfile:
         path: ~/.bash_profile
-        block: |
-          [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-          [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+        line: "{{ item }}"
         state: present
+      loop:
+        - '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm'
+        - '[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion'
     - name: Add nvm to zsh
-      blockinfile:
+      lineinfile:
         path: ~/.zshrc
-        block: |
-          [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-          [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+        line: "{{ item }}"
         state: present
-    
-    - name: Check for nvm in fish
-      shell: fish --command "nvm -v"
-      ignore_errors: yes
-      register: nvm_check_result
-      changed_when: nvm_check_result.failed
+      loop:
+        - '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm'
+        - '[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion'
     - name: Install nvm.fish
-      shell: fish --command "fisher install jorgebucaran/nvm.fish"
-      when: nvm_check_result.failed
+      shell: |
+        fish --command "nvm -v" || \
+        fish --command "fisher install jorgebucaran/nvm.fish"
+      register: nvm_fish_result
+      changed_when: nvm_fish_result.stdout is match("fisher")
