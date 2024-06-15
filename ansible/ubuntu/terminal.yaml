@@ -76,7 +76,20 @@
     #     fish --command="alias --save ls='lsd'"
     #   when: lsd_install_result.changed
     
-    # TODO: Figure out how to install nerd fonts on Ubuntu
+    - name: Create font directory if it does not exist
+      file:
+        path: ~/.local/share/fonts
+        state: directory
+    - name: Check for hack font
+      stat:
+        path: ~/.local/share/fonts/HackNerdFont-Regular.ttf
+      register: hack_font
+    - name: Install hack fonts
+      unarchive:
+        src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.tar.xz
+        dest: ~/.local/share/fonts/
+        remote_src: yes
+      when: not hack_font.stat.exists
 
     - name: Install starship
       shell: |
