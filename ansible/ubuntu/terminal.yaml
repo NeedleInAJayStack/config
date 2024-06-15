@@ -23,6 +23,17 @@
         update_cache: yes
       become: true
 
+    - name: Install apt packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - fzf
+        - htop
+        - jq
+        - neovim
+      become: true
+
     - name: Install fish
       apt:
         name: fish
@@ -41,17 +52,6 @@
         fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
       register: fisher_result
       changed_when: fisher_result.stdout is match("fisher install")
-
-    - name: Install apt packages
-      apt:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - fzf
-        - htop
-        - jq
-        - neovim
-      become: true
 
     - name: Install yq
       shell: |
