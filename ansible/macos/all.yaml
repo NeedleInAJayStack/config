@@ -1,3 +1,4 @@
 - import_playbook: terminal.yaml
 - import_playbook: applications.yaml
 - import_playbook: dev.yaml
+- import_playbook: devops.yaml
