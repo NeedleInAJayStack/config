@@ -1,7 +1,7 @@
 - hosts: localhost
   tasks:
     - name: Install base apt packages
-      apt:
+      ansible.builtin.apt:
         name: "{{ item }}"
         state: present
       loop:
@@ -11,20 +11,20 @@
       become: true
 
     - name: Add apt repositories
-      apt_repository:
+      ansible.builtin.apt_repository:
         repo: "{{ item }}"
       become: true
       loop:
         - ppa:fish-shell/release-3
         - ppa:neovim-ppa/stable
-    
+
     - name: Update apt
-      apt:
+      ansible.builtin.apt:
         update_cache: yes
       become: true
 
     - name: Install apt packages
-      apt:
+      ansible.builtin.apt:
         name: "{{ item }}"
         state: present
       loop:
@@ -35,26 +35,26 @@
       become: true
 
     - name: Install fish
-      apt:
+      ansible.builtin.apt:
         name: fish
         state: present
       register: fish_install_result
       become: true
     - name: Add fish to shells
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/shells
         line: "/usr/bin/fish"
         state: present
       become: true
     - name: Install fisher
-      shell: |
+      ansible.builtin.shell: |
         fish --command "fisher -v" || \
         fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
       register: fisher_result
       changed_when: fisher_result.stdout is match("fisher install")
 
     - name: Install yq
-      shell: |
+      ansible.builtin.shell: |
         which yq || (
           platform=$(uname -m)
           curl https://github.com/mikefarah/yq/releases/latest/download/yq_linux_$platform -o /usr/bin/yq
@@ -63,49 +63,49 @@
       become: true
       register: yq_result
       changed_when: yq_result.stdout is not regex(".*/yq")
-    
+
     # TODO: LSD is only available in Ubuntu 23.04 :(
     # - name: Install lsd
-    #   apt:
+    #   ansible.builtin.apt:
     #     name: lsd
     #     state: present
     #   become: true
     #   register: lsd_install_result
     # - name: Add alias if lsd was installed or changed
-    #   shell: |
+    #   ansible.builtin.shell: |
     #     fish --command="alias --save ls='lsd'"
     #   when: lsd_install_result.changed
-    
+
     - name: Create font directory if it does not exist
-      file:
+      ansible.builtin.file:
         path: ~/.local/share/fonts
         state: directory
     - name: Check for hack font
-      stat:
+      ansible.builtin.stat:
         path: ~/.local/share/fonts/HackNerdFont-Regular.ttf
       register: hack_font
     - name: Install hack fonts
-      unarchive:
+      ansible.builtin.unarchive:
         src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.tar.xz
         dest: ~/.local/share/fonts/
         remote_src: yes
       when: not hack_font.stat.exists
 
     - name: Install starship
-      shell: |
+      ansible.builtin.shell: |
         which starship || \
         curl -sS https://starship.rs/install.sh | sh -s -- -f
       register: starship_result
       changed_when: starship_result.stdout is not regex(".*/starship")
     - name: Add starship init to fish
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.config/fish/config.fish
         create: true
         line: "starship init fish | source"
         state: present
 
     - name: Link neovim config
-      file:
+      ansible.builtin.file:
         src: ~/dev/config/nvim
         dest: ~/.config/nvim
         state: link

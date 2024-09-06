@@ -33,7 +33,7 @@
         - xquartz
 
     - name: Link alacritty config
-      file:
+      ansible.builtin.file:
         src: ~/dev/config/alacritty
         dest: ~/.config/alacritty
         state: link

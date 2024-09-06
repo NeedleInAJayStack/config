@@ -39,29 +39,29 @@
       when: ansible_facts["os_family"] == "Darwin"
 
     - name: Add fish to shells
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/shells
         line: "/opt/homebrew/bin/fish"
         state: present
       become: true
     - name: Install fisher
-      shell: |
+      ansible.builtin.shell: |
         fish --command "fisher -v" || \
         fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
 
     - name: Add starship init to fish
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.config/fish/config.fish
         line: "starship init fish | source"
         state: present
 
     - name: Link neovim config
-      file:
+      ansible.builtin.file:
         src: ~/dev/config/nvim
         dest: ~/.config/nvim
         state: link
 
     - name: Add alias if lsd was installed or changed
-      shell: |
+      ansible.builtin.shell: |
         fish --command="alias --save ls='lsd'"
       when: lsd_install_result.changed
