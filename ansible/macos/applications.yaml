@@ -1,4 +1,5 @@
-- hosts: localhost
+- name: Applications
+  hosts: localhost
   tasks:
     - name: Ensure Homebrew is installed
       community.general.homebrew:

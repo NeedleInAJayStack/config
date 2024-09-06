@@ -1,5 +1,6 @@
 # Assumes that 'terminal.yaml' has been run to set up fish & fisher
-- hosts: localhost
+- name: Development
+  hosts: localhost
   tasks:
     - name: Ensure Homebrew is installed
       community.general.homebrew:
