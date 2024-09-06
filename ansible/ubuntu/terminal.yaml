@@ -56,7 +56,8 @@
     - name: Install fisher
       ansible.builtin.shell: |
         set -euo pipefail
-        fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
+        fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish \
+          | source && fisher install jorgebucaran/fisher"
       when: fisher_installed.rc > 0
       changed_when: true
 
