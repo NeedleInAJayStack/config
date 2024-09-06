@@ -5,7 +5,7 @@ This defines a base configuration. By using Ansible, the configuration is declar
 To use it, install ansible and run:
 
 ```sh
-ansible-galaxy collection install community.general
+ansible-galaxy install -r requirements.yaml
 ```
 
 Note that if installing macos playbooks, you will likely have to install [homebrew](https://brew.sh/)
