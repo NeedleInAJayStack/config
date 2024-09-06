@@ -3,7 +3,7 @@
   tasks:
     - name: Ensure Homebrew is installed
       community.general.homebrew:
-        update_homebrew: yes
+        update_homebrew: true
       when: ansible_facts["os_family"] == "Darwin"
 
     - name: Install packages
