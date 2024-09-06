@@ -20,7 +20,7 @@
 
     - name: Update apt
       ansible.builtin.apt:
-        update_cache: yes
+        update_cache: true
       become: true
 
     - name: Install apt packages
@@ -88,7 +88,7 @@
       ansible.builtin.unarchive:
         src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.tar.xz
         dest: ~/.local/share/fonts/
-        remote_src: yes
+        remote_src: true
       when: not hack_font.stat.exists
 
     - name: Install starship
