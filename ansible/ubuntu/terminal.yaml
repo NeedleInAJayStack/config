@@ -54,10 +54,12 @@
       failed_when: fisher_installed.rc > 0
       register: fisher_installed
     - name: Install fisher
-      ansible.builtin.shell: |
-        set -euo pipefail
-        fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish \
-          | source && fisher install jorgebucaran/fisher"
+      ansible.builtin.shell:
+        cmd: |
+          set -euo pipefail
+          fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish \
+            | source && fisher install jorgebucaran/fisher"
+        executable: /bin/bash
       when: fisher_installed.rc > 0
       changed_when: true
 
@@ -101,10 +103,12 @@
       when: not hack_font.stat.exists
 
     - name: Install starship
-      ansible.builtin.shell: |
-        set -euo pipefail
-        which starship || \
-        curl -sS https://starship.rs/install.sh | sh -s -- -f
+      ansible.builtin.shell:
+        cmd: |
+          set -euo pipefail
+          which starship || \
+          curl -sS https://starship.rs/install.sh | sh -s -- -f
+        executable: /bin/bash
       register: starship_result
       changed_when: starship_result.stdout is not regex(".*/starship")
     - name: Add starship init to fish
