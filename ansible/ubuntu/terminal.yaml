@@ -88,6 +88,7 @@
       ansible.builtin.file:
         path: ~/.local/share/fonts
         state: directory
+        mode: "0775"
     - name: Check for hack font
       ansible.builtin.stat:
         path: ~/.local/share/fonts/HackNerdFont-Regular.ttf
@@ -110,6 +111,7 @@
       ansible.builtin.lineinfile:
         path: ~/.config/fish/config.fish
         create: true
+        mode: "0664"
         line: "starship init fish | source"
         state: present
 
