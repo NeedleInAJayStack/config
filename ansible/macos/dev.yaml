@@ -1,9 +1,10 @@
 # Assumes that 'terminal.yaml' has been run to set up fish & fisher
-- hosts: localhost
+- name: Development
+  hosts: localhost
   tasks:
     - name: Ensure Homebrew is installed
       community.general.homebrew:
-        update_homebrew: yes
+        update_homebrew: true
 
     - name: Install texlive
       community.general.homebrew:
@@ -20,17 +21,17 @@
         name: kylef/formulae/swiftenv
         state: present
     - name: Add swiftenv to bash
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.bash_profile
         line: "if which swiftenv > /dev/null; then eval \"$(swiftenv init -)\"; fi"
         state: present
     - name: Add swiftenv to zsh
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.zshrc
         line: "if which swiftenv > /dev/null; then eval \"$(swiftenv init -)\"; fi"
         state: present
     - name: Add swiftenv to fish
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.config/fish/config.fish
         line: "if which swiftenv > /dev/null; status --is-interactive; and source (swiftenv init -|psub); end"
         state: present
@@ -40,7 +41,7 @@
         name: pyenv
         state: present
     - name: Add pyenv to bash
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.bash_profile
         line: "{{ item }}"
         state: present
@@ -48,7 +49,7 @@
         - eval "$(pyenv init -)"
         - export PYENV_ROOT="$HOME/.pyenv"
     - name: Add pyenv to zsh
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.zshrc
         line: "{{ item }}"
         state: present
@@ -56,7 +57,7 @@
         - eval "$(pyenv init -)"
         - export PYENV_ROOT="$HOME/.pyenv"
     - name: Add pyenv to fish
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.config/fish/config.fish
         line: "{{ item }}"
         state: present
@@ -69,7 +70,7 @@
         name: goenv
         state: present
     - name: Add goenv to bash
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.bash_profile
         line: "{{ item }}"
         state: present
@@ -77,7 +78,7 @@
         - eval "$(goenv init -)"
         - export GOENV_ROOT="$HOME/.goenv"
     - name: Add goenv to zsh
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.zshrc
         line: "{{ item }}"
         state: present
@@ -85,7 +86,7 @@
         - eval "$(goenv init -)"
         - export GOENV_ROOT="$HOME/.goenv"
     - name: Add goenv to fish
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.config/fish/config.fish
         line: "{{ item }}"
         state: present
@@ -98,17 +99,17 @@
         name: jenv
         state: present
     - name: Add jenv to bash
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.bash_profile
         line: "eval \"$(jenv init -)\""
         state: present
     - name: Add jenv to zsh
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.zshrc
         line: "eval \"$(jenv init -)\""
         state: present
     - name: Add jenv to fish
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.config/fish/config.fish
         line: "if which jenv > /dev/null; status --is-interactive; and source (jenv init -|psub); end"
         state: present
@@ -118,7 +119,7 @@
         name: nvm
         state: present
     - name: Add nvm to bash
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.bash_profile
         line: "{{ item }}"
         state: present
@@ -126,7 +127,7 @@
         - '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm'
         - '[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion'
     - name: Add nvm to zsh
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.zshrc
         line: "{{ item }}"
         state: present
@@ -134,7 +135,7 @@
         - '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm'
         - '[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion'
     - name: Install nvm.fish
-      shell: |
+      ansible.builtin.shell: |
         fish --command "nvm -v" || \
         fish --command "fisher install jorgebucaran/nvm.fish"
       register: nvm_fish_result

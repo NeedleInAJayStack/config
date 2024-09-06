@@ -1,8 +1,9 @@
-- hosts: localhost
+- name: Terminal
+  hosts: localhost
   tasks:
     - name: Ensure Homebrew is installed
       community.general.homebrew:
-        update_homebrew: yes
+        update_homebrew: true
       when: ansible_facts["os_family"] == "Darwin"
 
     - name: Install packages
@@ -23,7 +24,7 @@
         name: lsd
         state: present
       when: ansible_facts["os_family"] == "Darwin"
-      register: lsd_install_result
+      notify: Add alias if lsd was installed or changed
 
     - name: Install font-hack-nerd-font
       community.general.homebrew_cask:
@@ -39,29 +40,38 @@
       when: ansible_facts["os_family"] == "Darwin"
 
     - name: Add fish to shells
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/shells
         line: "/opt/homebrew/bin/fish"
         state: present
       become: true
+    - name: Check for fisher
+      ansible.builtin.raw: fish --command "fisher -v"
+      check_mode: false
+      changed_when: false
+      failed_when: fisher_installed.rc > 0
+      register: fisher_installed
     - name: Install fisher
-      shell: |
-        fish --command "fisher -v" || \
-        fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
+      ansible.builtin.shell: |
+        set -euo pipefail
+        fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish \
+          | source && fisher install jorgebucaran/fisher"
+      when: fisher_installed.rc > 0
+      changed_when: true
 
     - name: Add starship init to fish
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.config/fish/config.fish
         line: "starship init fish | source"
         state: present
 
     - name: Link neovim config
-      file:
+      ansible.builtin.file:
         src: ~/dev/config/nvim
         dest: ~/.config/nvim
         state: link
-
+  handlers:
     - name: Add alias if lsd was installed or changed
-      shell: |
+      ansible.builtin.shell: |
         fish --command="alias --save ls='lsd'"
-      when: lsd_install_result.changed
+      changed_when: true

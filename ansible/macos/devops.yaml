@@ -1,8 +1,9 @@
-- hosts: localhost
+- name: DevOps
+  hosts: localhost
   tasks:
     - name: Ensure Homebrew is installed
       community.general.homebrew:
-        update_homebrew: yes
+        update_homebrew: true
 
     - name: Install terraform
       community.general.homebrew:
