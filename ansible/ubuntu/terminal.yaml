@@ -48,6 +48,7 @@
       become: true
     - name: Install fisher
       ansible.builtin.shell: |
+        set -euo pipefail
         fish --command "fisher -v" || \
         fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
       register: fisher_result
@@ -93,6 +94,7 @@
 
     - name: Install starship
       ansible.builtin.shell: |
+        set -euo pipefail
         which starship || \
         curl -sS https://starship.rs/install.sh | sh -s -- -f
       register: starship_result
