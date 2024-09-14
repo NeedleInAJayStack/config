@@ -120,10 +120,11 @@
         state: present
     - name: Add nvm to bash
       ansible.builtin.lineinfile:
-        path: ~/.bash_profile
+        path: ~/.bashrc
         line: "{{ item }}"
         state: present
       loop:
+        - 'export NVM_DIR="$HOME/.nvm"'
         - '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm'
         - '[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion'
     - name: Add nvm to zsh
@@ -132,6 +133,7 @@
         line: "{{ item }}"
         state: present
       loop:
+        - 'export NVM_DIR="$HOME/.nvm"'
         - '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm'
         - '[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion'
     - name: Install nvm.fish
