@@ -20,11 +20,6 @@
       community.general.homebrew:
         name: kylef/formulae/swiftenv
         state: present
-    - name: Add swiftenv to bash
-      ansible.builtin.lineinfile:
-        path: ~/.bash_profile
-        line: "if which swiftenv > /dev/null; then eval \"$(swiftenv init -)\"; fi"
-        state: absent
     - name: Add swiftenv block to bash
       ansible.builtin.blockinfile:
         block: |
@@ -32,11 +27,6 @@
         marker: "# {mark} ANSIBLE MANAGED BLOCK: swiftenv"
         path: ~/.bash_profile
         state: present
-    - name: Add swiftenv to zsh
-      ansible.builtin.lineinfile:
-        path: ~/.zshrc
-        line: "if which swiftenv > /dev/null; then eval \"$(swiftenv init -)\"; fi"
-        state: absent
     - name: Add swiftenv block to zsh
       ansible.builtin.blockinfile:
         block: |
@@ -44,11 +34,6 @@
         marker: "# {mark} ANSIBLE MANAGED BLOCK: swiftenv"
         path: ~/.zshrc
         state: present
-    - name: Add swiftenv to fish
-      ansible.builtin.lineinfile:
-        path: ~/.config/fish/config.fish
-        line: "if which swiftenv > /dev/null; status --is-interactive; and source (swiftenv init -|psub); end"
-        state: absent
     - name: Add swiftenv block to fish
       ansible.builtin.blockinfile:
         block: |
@@ -61,14 +46,6 @@
       community.general.homebrew:
         name: pyenv
         state: present
-    - name: Add pyenv to bash
-      ansible.builtin.lineinfile:
-        path: ~/.bash_profile
-        line: "{{ item }}"
-        state: absent
-      loop:
-        - eval "$(pyenv init -)"
-        - export PYENV_ROOT="$HOME/.pyenv"
     - name: Add pyenv block to bash
       ansible.builtin.blockinfile:
         block: |
@@ -77,14 +54,6 @@
         marker: "# {mark} ANSIBLE MANAGED BLOCK: pyenv"
         path: ~/.bash_profile
         state: present
-    - name: Add pyenv to zsh
-      ansible.builtin.lineinfile:
-        path: ~/.zshrc
-        line: "{{ item }}"
-        state: absent
-      loop:
-        - eval "$(pyenv init -)"
-        - export PYENV_ROOT="$HOME/.pyenv"
     - name: Add pyenv block to zsh
       ansible.builtin.blockinfile:
         block: |
@@ -93,14 +62,6 @@
         marker: "# {mark} ANSIBLE MANAGED BLOCK: pyenv"
         path: ~/.zshrc
         state: present
-    - name: Add pyenv to fish
-      ansible.builtin.lineinfile:
-        path: ~/.config/fish/config.fish
-        line: "{{ item }}"
-        state: absent
-      loop:
-        - if which pyenv > /dev/null; status --is-interactive; and source (pyenv init -|psub); end
-        - set -gx PYENV_ROOT $HOME/.pyenv
     - name: Add pyenv block to fish
       ansible.builtin.blockinfile:
         block: |
@@ -114,14 +75,6 @@
       community.general.homebrew:
         name: goenv
         state: present
-    - name: Add goenv to bash
-      ansible.builtin.lineinfile:
-        path: ~/.bash_profile
-        line: "{{ item }}"
-        state: absent
-      loop:
-        - eval "$(goenv init -)"
-        - export GOENV_ROOT="$HOME/.goenv"
     - name: Add goenv block to bash
       ansible.builtin.blockinfile:
         block: |
@@ -130,14 +83,6 @@
         marker: "# {mark} ANSIBLE MANAGED BLOCK: goenv"
         path: ~/.bash_profile
         state: present
-    - name: Add goenv to zsh
-      ansible.builtin.lineinfile:
-        path: ~/.zshrc
-        line: "{{ item }}"
-        state: absent
-      loop:
-        - eval "$(goenv init -)"
-        - export GOENV_ROOT="$HOME/.goenv"
     - name: Add goenv block to zsh
       ansible.builtin.blockinfile:
         block: |
@@ -146,14 +91,6 @@
         marker: "# {mark} ANSIBLE MANAGED BLOCK: goenv"
         path: ~/.zshrc
         state: present
-    - name: Add goenv to fish
-      ansible.builtin.lineinfile:
-        path: ~/.config/fish/config.fish
-        line: "{{ item }}"
-        state: absent
-      loop:
-        - if which goenv > /dev/null; status --is-interactive; and source (goenv init -|psub); end
-        - set -gx GOENV_ROOT $HOME/.goenv
     - name: Add goenv block to fish
       ansible.builtin.blockinfile:
         block: |
@@ -167,11 +104,6 @@
       community.general.homebrew:
         name: jenv
         state: present
-    - name: Add jenv to bash
-      ansible.builtin.lineinfile:
-        path: ~/.bash_profile
-        line: "eval \"$(jenv init -)\""
-        state: absent
     - name: Add jenv block to bash
       ansible.builtin.blockinfile:
         block: |
@@ -179,11 +111,6 @@
         marker: "# {mark} ANSIBLE MANAGED BLOCK: jenv"
         path: ~/.bash_profile
         state: present
-    - name: Add jenv to zsh
-      ansible.builtin.lineinfile:
-        path: ~/.zshrc
-        line: "eval \"$(jenv init -)\""
-        state: absent
     - name: Add jenv block to zsh
       ansible.builtin.blockinfile:
         block: |
@@ -191,11 +118,6 @@
         marker: "# {mark} ANSIBLE MANAGED BLOCK: jenv"
         path: ~/.zshrc
         state: present
-    - name: Add jenv to fish
-      ansible.builtin.lineinfile:
-        path: ~/.config/fish/config.fish
-        line: "if which jenv > /dev/null; status --is-interactive; and source (jenv init -|psub); end"
-        state: absent
     - name: Add jenv block to fish
       ansible.builtin.blockinfile:
         block: |
@@ -208,15 +130,6 @@
       community.general.homebrew:
         name: nvm
         state: present
-    - name: Add nvm to bash
-      ansible.builtin.lineinfile:
-        path: ~/.bashrc
-        line: "{{ item }}"
-        state: absent
-      loop:
-        - 'export NVM_DIR="$HOME/.nvm"'
-        - '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm'
-        - '[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion'
     - name: Add nvm block to bash
       ansible.builtin.blockinfile:
         block: |
@@ -226,15 +139,6 @@
         marker: "# {mark} ANSIBLE MANAGED BLOCK: nvm"
         path: ~/.bashrc
         state: present
-    - name: Add nvm to zsh
-      ansible.builtin.lineinfile:
-        path: ~/.zshrc
-        line: "{{ item }}"
-        state: absent
-      loop:
-        - 'export NVM_DIR="$HOME/.nvm"'
-        - '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm'
-        - '[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion'
     - name: Add nvm block to zsh
       ansible.builtin.blockinfile:
         block: |
