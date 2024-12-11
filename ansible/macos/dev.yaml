@@ -16,6 +16,19 @@
         name: adoptopenjdk
         state: present
 
+    - name: Ensure bash_profile exists
+      ansible.builtin.file:
+        path: ~/.bash_profile
+        state: touch
+    - name: Ensure zshrc exists
+      ansible.builtin.file:
+        path: ~/.zshrc
+        state: touch
+    - name: Ensure fish config exists
+      ansible.builtin.file:
+        path: ~/.config/fish/config.fish
+        state: touch
+
     - name: Install swiftenv
       community.general.homebrew:
         name: kylef/formulae/swiftenv

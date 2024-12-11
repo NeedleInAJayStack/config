@@ -38,6 +38,10 @@
         state: present
       register: fish_install_result
       when: ansible_facts["os_family"] == "Darwin"
+    - name: Ensure fish config exists
+      ansible.builtin.file:
+        path: ~/.config/fish/config.fish
+        state: touch
 
     - name: Add fish to shells
       ansible.builtin.lineinfile:
@@ -51,6 +55,7 @@
       changed_when: false
       failed_when: fisher_installed.rc > 0
       register: fisher_installed
+      ignore_errors: true
     - name: Install fisher
       ansible.builtin.shell:
         cmd: |
