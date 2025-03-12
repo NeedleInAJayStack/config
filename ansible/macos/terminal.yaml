@@ -66,6 +66,12 @@
       when: fisher_installed.rc > 0
       changed_when: true
 
+    - name: Add homebrew to fish path
+      ansible.builtin.lineinfile:
+        path: ~/.config/fish/config.fish
+        line: "set --export --prepend PATH \"/opt/homebrew/bin\""
+        state: present
+
     - name: Add starship init to fish
       ansible.builtin.lineinfile:
         path: ~/.config/fish/config.fish
