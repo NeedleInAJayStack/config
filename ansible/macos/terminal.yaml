@@ -6,6 +6,11 @@
         update_homebrew: true
       when: ansible_facts["os_family"] == "Darwin"
 
+    - name: Add NeedleInAJayStack homebrew tap
+      community.general.homebrew_tap:
+        name: NeedleInAJayStack/tap
+        state: present
+
     - name: Install packages
       community.general.homebrew:
         name: "{{ item }}"
@@ -16,6 +21,7 @@
         - jq
         - neovim
         - starship
+        - units
         - yq
       when: ansible_facts["os_family"] == "Darwin"
 
