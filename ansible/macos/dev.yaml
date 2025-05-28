@@ -11,9 +11,15 @@
         name: texlive
         state: present
 
-    - name: Install adoptopenjdk
+    # Replaced by temurin
+    - name: Uninstall adoptopenjdk
       community.general.homebrew_cask:
         name: adoptopenjdk
+        state: uninstalled
+
+    - name: Install temurin
+      community.general.homebrew_cask:
+        name: temurin
         state: present
 
     - name: Ensure bash_profile exists
