@@ -4,9 +4,6 @@ globals = {
   "vim",
   "unpack",
 }
-read_globals = {
-  "vim",
-}
 max_line_length = 120
 ignore = {
   "211", -- Unused variable
