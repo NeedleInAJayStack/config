@@ -10,7 +10,6 @@
         - gnupg
         - gcc
       become: true
-
     - name: Add apt repositories
       ansible.builtin.apt_repository:
         repo: "{{ item }}"
@@ -18,12 +17,10 @@
       loop:
         - ppa:fish-shell/release-3
         - ppa:neovim-ppa/stable
-
     - name: Update apt
       ansible.builtin.apt:
         update_cache: true
       become: true
-
     - name: Install apt packages
       ansible.builtin.apt:
         name: "{{ item }}"
@@ -34,7 +31,6 @@
         - jq
         - neovim
       become: true
-
     - name: Install fish
       ansible.builtin.apt:
         name: fish
@@ -57,23 +53,26 @@
       ansible.builtin.shell:
         cmd: |
           set -euo pipefail
-          fish --command "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish \
-            | source && fisher install jorgebucaran/fisher"
+          fish --command "curl -sL \
+          https://raw.githubusercontent.com/jorgebucaran/fisher/\
+          main/functions/fisher.fish | \
+          source && fisher install jorgebucaran/fisher"
         executable: /bin/bash
       when: fisher_installed.rc > 0
       changed_when: true
-
     - name: Install yq
       ansible.builtin.shell: |
         which yq || (
-          platform=$(uname -m)
-          curl https://github.com/mikefarah/yq/releases/latest/download/yq_linux_$platform -o /usr/bin/yq
+          platform=$(uname -m);
+          curl
+          https://github.com/mikefarah/yq/releases/latest/download/
+          yq_linux_$platform
+          -o /usr/bin/yq;
           chmod +x /usr/bin/yq
         )
       become: true
       register: yq_result
       changed_when: yq_result.stdout is not regex(".*/yq")
-
     # TODO: LSD is only available in Ubuntu 23.04 :(
     # - name: Install lsd
     #   ansible.builtin.apt:
@@ -85,7 +84,6 @@
     #   ansible.builtin.shell: |
     #     fish --command="alias --save ls='lsd'"
     #   when: lsd_install_result.changed
-
     - name: Create font directory if it does not exist
       ansible.builtin.file:
         path: ~/.local/share/fonts
@@ -97,11 +95,12 @@
       register: hack_font
     - name: Install hack fonts
       ansible.builtin.unarchive:
-        src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.tar.xz
+        src: |
+          https://github.com/ryanoasis/nerd-fonts/releases/\
+          latest/download/Hack.tar.xz
         dest: ~/.local/share/fonts/
         remote_src: true
       when: not hack_font.stat.exists
-
     - name: Install starship
       ansible.builtin.shell:
         cmd: |
@@ -118,7 +117,6 @@
         mode: "0664"
         line: "starship init fish | source"
         state: present
-
     - name: Link neovim config
       ansible.builtin.file:
         src: ~/dev/config/nvim

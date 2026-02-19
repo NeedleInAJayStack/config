@@ -1,17 +1,17 @@
 # Formatting and Linting
 
-This repository uses formatters and linters to maintain code quality and consistency.
+This repository uses formatters and linters with their default configurations to maintain code quality and consistency.
 
 ## Tools
 
 ### YAML
-- **Formatter**: [yamlfmt](https://github.com/google/yamlfmt)
-- **Linter**: [yamllint](https://github.com/adrienverge/yamllint)
-- **Ansible Linter**: [ansible-lint](https://github.com/ansible/ansible-lint)
+- **Formatter**: [yamlfmt](https://github.com/google/yamlfmt) - default configuration
+- **Linter**: [yamllint](https://github.com/adrienverge/yamllint) - default configuration
+- **Ansible Linter**: [ansible-lint](https://github.com/ansible/ansible-lint) - default configuration
 
 ### Lua (Neovim config)
-- **Formatter**: [StyLua](https://github.com/JohnnyMorganz/StyLua)
-- **Linter**: [luacheck](https://github.com/lunarmodules/luacheck)
+- **Formatter**: [StyLua](https://github.com/JohnnyMorganz/StyLua) - using existing stylua.toml
+- **Linter**: [luacheck](https://github.com/lunarmodules/luacheck) - default configuration
 
 ## Installation
 
@@ -81,4 +81,4 @@ The repository includes GitHub Actions workflows that automatically check format
 - **Formatting Workflow** (`.github/workflows/formatting.yml`): Checks YAML and Lua formatting
 - **Linting Workflow** (`.github/workflows/linting.yml`): Runs yamllint, ansible-lint, and luacheck
 
-All checks run on every push and pull request.
+All checks run on every push and pull request using default tool configurations.
