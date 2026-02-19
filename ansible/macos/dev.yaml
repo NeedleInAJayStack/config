@@ -5,36 +5,34 @@
     - name: Ensure Homebrew is installed
       community.general.homebrew:
         update_homebrew: true
-
     - name: Install texlive
       community.general.homebrew:
         name: texlive
         state: present
-
     # Replaced by temurin
     - name: Uninstall adoptopenjdk
       community.general.homebrew_cask:
         name: adoptopenjdk
         state: uninstalled
-
     - name: Install temurin
       community.general.homebrew_cask:
         name: temurin
         state: present
-
     - name: Ensure bash_profile exists
       ansible.builtin.file:
         path: ~/.bash_profile
         state: touch
+        mode: "0644"
     - name: Ensure zshrc exists
       ansible.builtin.file:
         path: ~/.zshrc
         state: touch
+        mode: "0644"
     - name: Ensure fish config exists
       ansible.builtin.file:
         path: ~/.config/fish/config.fish
         state: touch
-
+        mode: "0644"
     # Replaced by swiftly
     - name: Uninstall swiftenv
       community.general.homebrew:
@@ -57,16 +55,17 @@
     - name: Add swiftenv block to fish
       ansible.builtin.blockinfile:
         block: |
-          if which swiftenv > /dev/null; status --is-interactive; and source (swiftenv init -|psub); end
+          if which swiftenv > /dev/null; \
+            status --is-interactive; \
+            and source (swiftenv init -|psub); \
+          end
         marker: "# {mark} ANSIBLE MANAGED BLOCK: swiftenv"
         path: ~/.config/fish/config.fish
         state: absent
-
     - name: Install swiftly
       community.general.homebrew:
         name: swiftly
         state: present
-
     - name: Install pyenv
       community.general.homebrew:
         name: pyenv
@@ -90,12 +89,14 @@
     - name: Add pyenv block to fish
       ansible.builtin.blockinfile:
         block: |
-          if which pyenv > /dev/null; status --is-interactive; and source (pyenv init -|psub); end
+          if which pyenv > /dev/null; \
+            status --is-interactive; \
+            and source (pyenv init -|psub); \
+          end
           set -gx PYENV_ROOT $HOME/.pyenv
         marker: "# {mark} ANSIBLE MANAGED BLOCK: pyenv"
         path: ~/.config/fish/config.fish
         state: present
-
     - name: Install goenv
       community.general.homebrew:
         name: goenv
@@ -119,12 +120,14 @@
     - name: Add goenv block to fish
       ansible.builtin.blockinfile:
         block: |
-          if which goenv > /dev/null; status --is-interactive; and source (goenv init -|psub); end
+          if which goenv > /dev/null; \
+            status --is-interactive; \
+            and source (goenv init -|psub); \
+          end
           set -gx GOENV_ROOT $HOME/.goenv
         marker: "# {mark} ANSIBLE MANAGED BLOCK: goenv"
         path: ~/.config/fish/config.fish
         state: present
-
     - name: Install jenv
       community.general.homebrew:
         name: jenv
@@ -146,11 +149,13 @@
     - name: Add jenv block to fish
       ansible.builtin.blockinfile:
         block: |
-          if which jenv > /dev/null; status --is-interactive; and source (jenv init -|psub); end
+          if which jenv > /dev/null; \
+            status --is-interactive; \
+            and source (jenv init -|psub); \
+          end
         marker: "# {mark} ANSIBLE MANAGED BLOCK: jenv"
         path: ~/.config/fish/config.fish
         state: present
-
     - name: Install nvm
       community.general.homebrew:
         name: nvm
@@ -159,8 +164,10 @@
       ansible.builtin.blockinfile:
         block: |
           export NVM_DIR="$HOME/.nvm"
-          [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-          [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+          [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \
+            \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+          [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \
+            \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
         marker: "# {mark} ANSIBLE MANAGED BLOCK: nvm"
         path: ~/.bashrc
         state: present
@@ -168,8 +175,10 @@
       ansible.builtin.blockinfile:
         block: |
           export NVM_DIR="$HOME/.nvm"
-          [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-          [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+          [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \
+            \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+          [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \
+            \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
         marker: "# {mark} ANSIBLE MANAGED BLOCK: nvm"
         path: ~/.zshrc
         state: present

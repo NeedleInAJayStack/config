@@ -1,0 +1,32 @@
+name: Linting
+"on":
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: ["*"]
+permissions:
+  contents: read
+jobs:
+  yaml-lint:
+    name: YAML Linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run yamllint
+        run: docker run --rm -v $(pwd):/data cytopia/yamllint .
+  ansible-lint:
+    name: Ansible Linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ansible-lint
+        run: |
+          docker run --rm -v $(pwd):/data pipelinecomponents/ansible-lint sh -c \
+            "ansible-galaxy collection install -r ansible/requirements.yaml && ansible-lint ansible/"
+  lua-lint:
+    name: Lua Linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run luacheck
+        run: docker run --rm -v $(pwd):/data pipelinecomponents/luacheck luacheck nvim/
