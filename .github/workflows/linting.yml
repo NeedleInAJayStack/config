@@ -10,27 +10,19 @@ jobs:
   yaml-lint:
     name: YAML Linting
     runs-on: ubuntu-latest
+    container:
+      image: cytopia/yamllint:latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-      - name: Install yamllint
-        run: pip install yamllint
       - name: Run yamllint
         run: yamllint .
   ansible-lint:
     name: Ansible Linting
     runs-on: ubuntu-latest
+    container:
+      image: pipelinecomponents/ansible-lint:latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-      - name: Install ansible-lint
-        run: pip install ansible-lint
       - name: Install Ansible collections
         run: ansible-galaxy collection install -r ansible/requirements.yaml
       - name: Run ansible-lint
@@ -38,12 +30,9 @@ jobs:
   lua-lint:
     name: Lua Linting
     runs-on: ubuntu-latest
+    container:
+      image: pipelinecomponents/luacheck:latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install luacheck
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y luarocks
-          sudo luarocks install luacheck
       - name: Run luacheck
         run: luacheck nvim/
