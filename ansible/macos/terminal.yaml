@@ -43,6 +43,7 @@
       ansible.builtin.file:
         path: ~/.config/fish/config.fish
         state: touch
+        mode: "0644"
     - name: Add fish to shells
       ansible.builtin.lineinfile:
         path: /etc/shells

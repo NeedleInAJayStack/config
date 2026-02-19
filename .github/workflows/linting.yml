@@ -10,29 +10,23 @@ jobs:
   yaml-lint:
     name: YAML Linting
     runs-on: ubuntu-latest
-    container:
-      image: cytopia/yamllint:latest
     steps:
       - uses: actions/checkout@v4
       - name: Run yamllint
-        run: yamllint .
+        run: docker run --rm -v $(pwd):/data cytopia/yamllint .
   ansible-lint:
     name: Ansible Linting
     runs-on: ubuntu-latest
-    container:
-      image: pipelinecomponents/ansible-lint:latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Ansible collections
-        run: ansible-galaxy collection install -r ansible/requirements.yaml
       - name: Run ansible-lint
-        run: ansible-lint ansible/
+        run: |
+          docker run --rm -v $(pwd):/data pipelinecomponents/ansible-lint sh -c \
+            "ansible-galaxy collection install -r ansible/requirements.yaml && ansible-lint ansible/"
   lua-lint:
     name: Lua Linting
     runs-on: ubuntu-latest
-    container:
-      image: pipelinecomponents/luacheck:latest
     steps:
       - uses: actions/checkout@v4
       - name: Run luacheck
-        run: luacheck nvim/
+        run: docker run --rm -v $(pwd):/data pipelinecomponents/luacheck luacheck nvim/

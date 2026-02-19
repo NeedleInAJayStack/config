@@ -22,14 +22,17 @@
       ansible.builtin.file:
         path: ~/.bash_profile
         state: touch
+        mode: "0644"
     - name: Ensure zshrc exists
       ansible.builtin.file:
         path: ~/.zshrc
         state: touch
+        mode: "0644"
     - name: Ensure fish config exists
       ansible.builtin.file:
         path: ~/.config/fish/config.fish
         state: touch
+        mode: "0644"
     # Replaced by swiftly
     - name: Uninstall swiftenv
       community.general.homebrew:
