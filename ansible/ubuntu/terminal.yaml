@@ -35,6 +35,21 @@
         - neovim
       become: true
 
+    - name: Check for opencode
+      ansible.builtin.command: which opencode
+      register: opencode_installed
+      changed_when: false
+      failed_when: false
+
+    - name: Install opencode
+      ansible.builtin.shell:
+        cmd: |
+          set -euo pipefail
+          curl -fsSL https://opencode.ai/install | bash
+        executable: /bin/bash
+      when: opencode_installed.rc != 0
+      changed_when: true
+
     - name: Install fish
       ansible.builtin.apt:
         name: fish
@@ -123,4 +138,16 @@
       ansible.builtin.file:
         src: ~/dev/config/nvim
         dest: ~/.config/nvim
+        state: link
+
+    - name: Link skills to opencode
+      ansible.builtin.file:
+        src: ~/dev/config/agents/skills
+        dest: ~/.config/opencode/skills
+        state: link
+
+    - name: Link AGENTS.md to opencode
+      ansible.builtin.file:
+        src: ~/dev/config/agents/AGENTS.md
+        dest: ~/.config/opencode/AGENTS.md
         state: link

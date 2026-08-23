@@ -16,6 +16,7 @@
         name: "{{ item }}"
         state: present
       loop:
+        - anomalyco/tap/opencode
         - fzf
         - htop
         - jq
@@ -88,6 +89,18 @@
       ansible.builtin.file:
         src: ~/dev/config/nvim
         dest: ~/.config/nvim
+        state: link
+
+    - name: Link skills to opencode
+      ansible.builtin.file:
+        src: ~/dev/config/agents/skills
+        dest: ~/.config/opencode/skills
+        state: link
+
+    - name: Link AGENTS.md to opencode
+      ansible.builtin.file:
+        src: ~/dev/config/agents/AGENTS.md
+        dest: ~/.config/opencode/AGENTS.md
         state: link
   handlers:
     - name: Add alias if lsd was installed or changed
