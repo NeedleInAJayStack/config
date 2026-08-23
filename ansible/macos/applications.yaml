@@ -13,25 +13,19 @@
         - alacritty
         - bitwarden
         - chromium
-        - discord
         - firefox
         - fork
         - inkscape
         - gnucash
-        - libreoffice
         - obsidian
         - protonmail-bridge
         - protonvpn
         - plexamp
         - rancher
         - rectangle
-        - signal
-        - slack
         - syncthing
         - tailscale
         - visual-studio-code
-        - vlc
-        - xquartz
 
     - name: Link alacritty config
       ansible.builtin.file:
