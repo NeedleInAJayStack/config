@@ -179,3 +179,13 @@
         fish --command "fisher install jorgebucaran/nvm.fish"
       register: nvm_fish_result
       changed_when: nvm_fish_result.stdout is match("fisher")
+    - name: Use the default Node version in fish
+      ansible.builtin.blockinfile:
+        block: |
+          set -q nvm_default_version; or set -g nvm_default_version latest
+          if status is-interactive
+              nvm use default --silent
+          end
+        marker: "# {mark} ANSIBLE MANAGED BLOCK: nvm.fish"
+        path: ~/.config/fish/config.fish
+        state: present
